@@ -111,9 +111,9 @@ CREATE TABLE CE(
                );         
 --Tabla telefonos empresas           
 CREATE TABLE Telefonos_E(
-		ID_Empresa CHAR(7) NOT NULL PRIMARY KEY,
-		telefono a_telefono,
-		CONSTRAINT FK_id_empresa_telefonos FOREIGN KEY(ID_Empresa) REFERENCES Empresas
+	ID_Empresa CHAR(7) NOT NULL PRIMARY KEY,
+	telefono a_telefono,
+	CONSTRAINT FK_id_empresa_telefonos FOREIGN KEY(ID_Empresa) REFERENCES Empresas
                         );
 --Tabla correos empresas
 CREATE TABLE Correos_E(
@@ -264,3 +264,135 @@ Begin
 	raise notice 'Se inserto Estudiante';
 end $BODY$
 language plpgsql;
+
+
+--Insertae Giras
+create or replace function insertar_Giras(
+	g_ID_Gira CHAR(7),
+	g_Fecha_inicio varchar(50),
+	g_Fecha_final varchar(50),
+	g_costo INT,
+	g_duracion varchar(30),
+	g_provincia VARCHAR(30) ,
+	g_canton VARCHAR(30) ,
+	g_distrito VARCHAR(30) ,
+	g_detalle VARCHAR(100) 
+
+)returns void as
+$BODY$
+Begin
+	raise notice 'Insertando';
+	insert into giras values (g_ID_Gira,cast (g_Fecha_inicio as date),cast (g_Fecha_final as date),g_costo,cast(g_duracion as time),g_provincia,g_canton,g_distrito,g_detalle);	
+	raise notice 'Se inserto Gira';
+end $BODY$
+language plpgsql;
+
+
+--Insertae Polizas
+create or replace function insertar_Polizas(
+	
+	p_ID_Poliza CHAR(7),
+	p_Descripcion VARCHAR(100),
+	p_Monto INT,
+	p_Fecha_vencimiento varchar(30),
+	p_Aseguradora VARCHAR(30)
+
+)returns void as
+$BODY$
+Begin
+	raise notice 'Insertando';
+	
+	insert into polizas values (p_ID_Poliza,p_Descripcion,p_Monto,cast(p_Fecha_vencimiento as date),p_Aseguradora);	
+	raise notice 'Se inserto Poliza';
+end $BODY$
+language plpgsql;
+
+
+
+
+----------Modificar-------------
+
+--Modificar giras
+CREATE OR REPLACE FUNCTION modificar_giras
+(
+	g_ID_Gira CHAR(7),
+	g_Fecha_inicio varchar(50),
+	g_Fecha_final varchar(50),
+	g_costo INT,
+	g_duracion varchar(30),
+	g_provincia VARCHAR(30) ,
+	g_canton VARCHAR(30) ,
+	g_distrito VARCHAR(30) ,
+	g_detalle VARCHAR(100) 
+
+) RETURNS VOID
+AS
+$BODY$
+BEGIN
+    update giras set
+	ID_gira=g_ID_Gira,
+	Fecha_inicio=cast(g_Fecha_inicio as date),
+	Fecha_final=cast(g_Fecha_final as date),
+	costo=g_costo,
+	duracion=cast (g_duracion as time),
+	provincia=g_provincia,
+	canton=g_canton,
+	distrito=g_distrito,
+	detalle=g_detalle 
+
+    where ID_gira=g_ID_Gira;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+--Modificar polizas
+CREATE OR REPLACE FUNCTION modificar_polizas
+(
+	p_ID_Poliza CHAR(7),
+	p_Descripcion VARCHAR(100),
+	p_Monto INT,
+	p_Fecha_vencimiento varchar(30),
+	p_Aseguradora VARCHAR(30)
+
+) RETURNS VOID
+AS
+$BODY$
+BEGIN
+    update polizas set
+	ID_Poliza=p_ID_Poliza,
+	Descripcion=p_Descripcion,
+	Monto=p_Monto,
+	Fecha_vencimiento=cast(p_Fecha_vencimiento as date),
+	Aseguradora=p_Aseguradora
+
+    where ID_poliza=p_ID_poliza;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+
+--borrado de giras
+CREATE OR REPLACE FUNCTION borrar_giras
+(
+	g_ID_Gira CHAR(7)
+) RETURNS VOID
+AS
+$BODY$
+BEGIN
+    delete from giras where id_gira=g_id_gira;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+--borrado polizas
+CREATE OR REPLACE FUNCTION borrar_polizas
+(
+	p_ID_poliza CHAR(7)
+) RETURNS VOID
+AS
+$BODY$
+BEGIN
+    delete from polizas where id_poliza=p_id_poliza;
+END;
+$BODY$
+LANGUAGE plpgsql;
